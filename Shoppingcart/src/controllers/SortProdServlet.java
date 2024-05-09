@@ -60,7 +60,6 @@ public class SortProdServlet extends HttpServlet {
 			temp.add(it.getProduct_image());
 			temp.add(it.getProduct_catid() + "");
 			ars.add(temp);
-			System.out.println(ars);
 		}
 		try {
 			ob.put("AllProducts", ars);

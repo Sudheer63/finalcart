@@ -20,7 +20,6 @@ public class CategoriesServlet extends HttpServlet {
 			gpbci = new DB_Properties();
 			ArrayList<String> arrc = gpbci.getAllCategories();
 			JSONObject ob = new JSONObject();
-			System.out.println(arrc);
 			for (int i = 0; i < arrc.size(); i += 2) {
 				int j = Integer.parseInt(arrc.get(i));
 				ob.put(arrc.get(i + 1), j);

@@ -200,8 +200,14 @@ $(document).on('click', '.single-new-arrival #checkpincode', function() {
     
 });
 function updateCartItemCount() {
-   
-    $('.cart-icon .badge').text(localStorage.length);
+    var count=0;
+  for (var i = 0; i < localStorage.length; i++) {
+	var key = localStorage.key(i);
+  if(key>=1 || key<=100){
+	count++;
+  }
+}
+    $('.cart-icon .badge').text(count);
 }
 
   $(document).ready(function () { 

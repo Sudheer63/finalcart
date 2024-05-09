@@ -20,8 +20,8 @@
             <tr>
                 <th>SNo</th>
                 <th>Item Name</th>
-                <th>Item Price</th>
                 <th>Item Quantity</th>
+                <th>Item Price</th>
                 <th>Total Base Price</th>
                 <th>Shipping Charge</th>
                 <th>GST</th>
@@ -57,6 +57,11 @@
     <button id="rzp-button1">Pay</button>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
+reload();
+function reload()
+{
+	location.reload(); 	
+}
 var tableBody = document.querySelector(".table-class tbody");
 
 //Function to get values of last column in each row
@@ -91,7 +96,7 @@ var options = {
     "name": "Acme Corp", //your business name
     "description": "Test Transaction",
     "image": "https://example.com/your_logo",
-    "order_id": "order_O7xCeQhriudFku", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    "order_id": "order_O7yFg6juTs3MOZ", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
     "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
     "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
         "name": "Gaurav Kumar", //your customer's name

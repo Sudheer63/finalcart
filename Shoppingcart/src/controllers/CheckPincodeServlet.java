@@ -26,7 +26,6 @@ public class CheckPincodeServlet extends HttpServlet {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		System.out.println(state + " dd");
 		response.setContentType("text/plain");
 		// Create a PrintWriter object to write response
 		PrintWriter out = response.getWriter();

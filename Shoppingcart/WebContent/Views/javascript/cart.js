@@ -71,22 +71,36 @@ function allitems()
 
 
 $(document).on('click','#checkout',function(){
+  var item = {};
 
-    for (var i = 0; i < localStorage.length; i++) {
+  for (var i = 0; i < localStorage.length; i++) {
       var key = localStorage.key(i);
+    if(key>=1 || key<=100){
       var value = localStorage.getItem(key);
-
       var itemData = JSON.parse(value);
+  
+      var v = itemData.itemQuantity;
+      var p = itemData.itemprice;
+      var n = itemData.itemname;
+  
+      // Create a JSON object for each item
+      var itemObject = {
+          'proid': key,
+          'itemQuantity': v,
+          'itemprice': p,
+          'itemname': n
+      };
+  
+      item[key]=itemObject;
+    }
+  }
 
-	  var v=itemData.itemQuantity;  
-    var p= itemData.itemprice;   
-    var n=itemData.itemname;
-	
-	console.log(key+" "+v);
+  
 $.ajax({
 		method:'POST',
 		url: 'http://localhost:8080/Shoppingcart/InsertCartServlet',
-		data:{'proid':key,'quantity':v,'price':p,'length':'1','name':n},
+		data:
+          {'item' : JSON.stringify(item)},
 		 success: function(data) {
 		      console.log("items sent to insert")
         },
@@ -95,5 +109,5 @@ $.ajax({
         }
 });
 
-}
+
 });

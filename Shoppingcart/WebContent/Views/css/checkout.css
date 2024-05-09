@@ -3,16 +3,20 @@
     width: 100%;
     margin-bottom: 20px;
     border-collapse: collapse;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    border-radius: 8px;
 }
 
 .table-class th,
 .table-class td {
-    padding: 8px;
+    padding: 12px;
     text-align: center;
 }
 
 .table-class th {
-    background-color: #f8f9fa;
+    background-color: #007bff;
+    color: #fff;
 }
 
 .table-class tbody tr:nth-child(even) {
@@ -44,9 +48,15 @@
         text-transform: uppercase;
     }
 }
+
+/* Additional styling for pricing section */
 .pricing {
-	display:flex;
+    display: flex;
     flex-direction: column;
-	width:100%;
-	justify-content: center;
+    width: 100%;
+    justify-content: center;
+    background-color: #f8f9fa;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
 }

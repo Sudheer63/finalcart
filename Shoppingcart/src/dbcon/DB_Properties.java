@@ -158,8 +158,9 @@ public class DB_Properties implements StoreDAO {
 		double pricetoquantity = 0;
 		double gst = 0;
 		double count = 0;
-		cs = con.prepareCall("{?=call getshipping(?)}");
+
 		for (Items i : list) {
+			cs = con.prepareCall("{?=call getshipping(?)}");
 			count = 0;
 			pricetoquantity = i.getPrice() * i.getQuantity();
 			cs.registerOutParameter(1, Types.NUMERIC);
@@ -171,8 +172,9 @@ public class DB_Properties implements StoreDAO {
 			count = count + gst;
 			bill.add(new BillingDetails(i.getProid(), i.getName(), i.getPrice(), i.getQuantity(), pricetoquantity,
 					shipping, gst, Math.round(count * 100.0) / 100.0));
+			cs.close();
 		}
-		cs.close();
+
 		return bill;
 	}
 
