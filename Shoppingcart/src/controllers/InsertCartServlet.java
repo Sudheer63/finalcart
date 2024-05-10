@@ -13,7 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
 
-import dbcon.DB_Properties;
+import dao.DAObridge;
 import dbcon.StoreDAO;
 import model.BillingDetails;
 import model.Items;
@@ -21,64 +21,13 @@ import model.Items;
 @WebServlet("/InsertCartServlet")
 
 public class InsertCartServlet extends HttpServlet {
-	// List<BillingDetails> l = new ArrayList<>();
-	// HttpSession session;
-	//
-	// protected void doPost(HttpServletRequest request, HttpServletResponse response)
-	// throws IOException, ServletException {
-	// List<BillingDetails> d = new ArrayList<>();
-	// StoreDAO gap = null;
-	//
-	// session = request.getSession();
-	// try {
-	// gap = new DB_Properties();
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	// List<Items> i = new ArrayList<>();
-	// int val = Integer.parseInt(request.getParameter("length"));
-	// while (val > 0) {
-	// String proid = request.getParameter("proid");
-	// String quantity = request.getParameter("quantity");
-	// String price = request.getParameter("price");
-	// float floatValue = Float.parseFloat(price);
-	// String name = request.getParameter("name");
-	// System.out.println(proid + " " + name);
-	// if (proid != null && (quantity != null && price != null)) {
-	// Items it = new Items(Integer.parseInt(proid), Integer.parseInt(quantity), floatValue, name);
-	// i.add(it);
-	// }
-	// val--;
-	// }
-	// for (Items lt : i) {
-	// System.out.println(lt.getName());
-	// }
-	// try {
-	// d = gap.shippingcharges(i);
-	//
-	// } catch (SQLException e) {
-	//
-	// e.printStackTrace();
-	// }
-	// for (BillingDetails samp : d) {
-	// l.add(samp);
-	// }
-	//
-	// session.setAttribute("bill", l);
-	//
-	// }
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
 		List<BillingDetails> l = new ArrayList<>();
-		StoreDAO gap = null;
+		StoreDAO gap = DAObridge.get();
 		HttpSession session = request.getSession();
-		try {
-			gap = new DB_Properties();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		List<Items> itemsList = new ArrayList<>();
 		String pro = request.getParameter("item");
 
@@ -98,7 +47,7 @@ public class InsertCartServlet extends HttpServlet {
 		}
 		l.clear();
 		try {
-			l = gap.shippingcharges(itemsList);
+			l = gap.proposedbill(itemsList);
 
 		} catch (Exception e) {
 

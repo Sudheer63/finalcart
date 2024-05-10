@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
-import dbcon.DB_Properties;
+import dao.DAObridge;
 import dbcon.StoreDAO;
 import model.Products;
 
@@ -23,9 +23,8 @@ public class AllProdByIdServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		StoreDAO gap;
+		StoreDAO gap = DAObridge.get();
 		try {
-			gap = new DB_Properties();
 			ArrayList<Products> products = null;
 			ArrayList<ArrayList<String>> ars = new ArrayList<>();
 			JSONObject ob = new JSONObject();

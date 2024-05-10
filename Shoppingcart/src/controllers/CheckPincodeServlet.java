@@ -9,19 +9,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dbcon.DB_Properties;
+import dao.DAObridge;
 import dbcon.StoreDAO;
 
 @WebServlet("/CheckPincodeServlet")
 public class CheckPincodeServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		StoreDAO gap;
+		StoreDAO gap = DAObridge.get();
 		String pincode = request.getParameter("pincode");
 		String prodid = request.getParameter("prodid");
 		boolean state = false;
 		try {
-			gap = new DB_Properties();
 			state = gap.checkpincode(pincode, prodid);
 		} catch (Exception e) {
 			System.out.println(e);

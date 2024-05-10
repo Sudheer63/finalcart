@@ -142,6 +142,8 @@ $(document).on('click', '.single-new-arrival #dec', function() {
 
 $(document).on('click', '.single-new-arrival .cart', function() {
 
+	$(this).closest('.cart').prop('disabled', true);
+
 	var pincodeInput = '<input type="text" placeholder="Enter pincode" id="pincode"/> <button id="checkpincode">Check</button>';
     $(this).closest('.single-new-arrival').append(pincodeInput);
 
@@ -197,7 +199,8 @@ $(document).on('click', '.single-new-arrival #checkpincode', function() {
 			console.error('AJAX request failed:', error);
 		}
 	});		
-    
+	$(this).closest('.single-new-arrival').find('#pincode, #checkpincode').remove();
+    $(this).closest('.single-new-arrival .cart').prop('disabled', false);
 });
 function updateCartItemCount() {
     var count=0;

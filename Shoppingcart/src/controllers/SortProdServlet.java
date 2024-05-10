@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
-import dbcon.DB_Properties;
+import dao.DAObridge;
 import dbcon.StoreDAO;
 import model.Products;
 
@@ -24,13 +24,8 @@ public class SortProdServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		StoreDAO gap = null;
-		try {
-			gap = new DB_Properties();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		StoreDAO gap = DAObridge.get();
+
 		ArrayList<Products> products = null;
 		ArrayList<ArrayList<String>> ars = new ArrayList<>();
 		JSONObject ob = new JSONObject();
@@ -41,14 +36,13 @@ public class SortProdServlet extends HttpServlet {
 			try {
 				products = gap.getAllProductSort(sortid);
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
+
 				e.printStackTrace();
 			}
 		} else {
 			try {
 				products = gap.getCatProductsSort(catid, sortid);
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

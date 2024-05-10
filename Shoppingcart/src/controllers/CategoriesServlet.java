@@ -9,16 +9,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
-import dbcon.DB_Properties;
+import dao.DAObridge;
 import dbcon.StoreDAO;
 
 @WebServlet("/CategoriesServlet")
 public class CategoriesServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) {
-		StoreDAO gpbci;
+		StoreDAO gap = DAObridge.get();
 		try {
-			gpbci = new DB_Properties();
-			ArrayList<String> arrc = gpbci.getAllCategories();
+			ArrayList<String> arrc = gap.getAllCategories();
 			JSONObject ob = new JSONObject();
 			for (int i = 0; i < arrc.size(); i += 2) {
 				int j = Integer.parseInt(arrc.get(i));

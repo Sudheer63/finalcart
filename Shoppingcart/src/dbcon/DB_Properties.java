@@ -2,7 +2,6 @@ package dbcon;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,20 +14,12 @@ import model.Items;
 import model.Products;
 
 public class DB_Properties implements StoreDAO {
-	private Connection con;
+	private Connection con = Dbcon.getDbcon();
 	private PreparedStatement ps;
 	private ResultSet rs;
-	private ArrayList<String> categories;
-	private ArrayList<Products> products;
+	private ArrayList<String> categories = new ArrayList<>();
+	private ArrayList<Products> products = new ArrayList<>();
 	private CallableStatement cs;
-
-	public DB_Properties() throws Exception {
-		Class.forName("org.postgresql.Driver");
-		con = DriverManager.getConnection("jdbc:postgresql://192.168.110.48:5432/postgres", "plf_training_admin",
-				"pff123");
-		categories = new ArrayList<>();
-		products = new ArrayList<>();
-	}
 
 	public ArrayList<String> getAllCategories() {
 		try {
@@ -111,17 +102,13 @@ public class DB_Properties implements StoreDAO {
 		return products;
 	}
 
-	private double getgst(int proid, double val) throws SQLException {
-		double totalPrice = 0;
+	private double getgst(int proid) throws SQLException {
 		cs = con.prepareCall("{?=call getgst(?)}");
 		cs.registerOutParameter(1, Types.DECIMAL);
 		cs.setInt(2, proid);
 		cs.execute();
 		double gst = cs.getBigDecimal(1).doubleValue();
-		totalPrice = val * (gst / 100);
-
-		cs.close();
-		return Math.round(totalPrice * 100.0) / 100.0;
+		return gst;
 	}
 
 	// @Override
@@ -152,30 +139,63 @@ public class DB_Properties implements StoreDAO {
 	//
 	// }
 
-	public ArrayList<BillingDetails> shippingcharges(List<Items> list) throws SQLException {
+	public ArrayList<BillingDetails> proposedbill(List<Items> list) throws SQLException {
 		ArrayList<BillingDetails> bill = new ArrayList<BillingDetails>();
-		double shipping = 0;
+		double priceratio = 0;
 		double pricetoquantity = 0;
 		double gst = 0;
-		double count = 0;
-
+		double sc_individual_gst = 0;
+		double prodwithoutgst = 0;
+		double ingst = 0;
+		double count = gettotal(list);
+		double total_shipping_charges = getshippingcharges(count);
+		double sc_individual = 0;
+		double total_individual = 0;
 		for (Items i : list) {
-			cs = con.prepareCall("{?=call getshipping(?)}");
-			count = 0;
+
+			gst = getgst(i.getProid());
+
+			// prod inclusive gst calculation
+			prodwithoutgst = (i.getPrice() / (1 + (gst / 100)));
+			ingst = i.getPrice() - prodwithoutgst;
+
+			// individual shipping charges
 			pricetoquantity = i.getPrice() * i.getQuantity();
-			cs.registerOutParameter(1, Types.NUMERIC);
-			cs.setInt(2, (int) pricetoquantity);
-			cs.execute();
-			shipping = cs.getBigDecimal(1).doubleValue();
-			count = pricetoquantity + shipping;
-			gst = getgst(i.getProid(), count);
-			count = count + gst;
-			bill.add(new BillingDetails(i.getProid(), i.getName(), i.getPrice(), i.getQuantity(), pricetoquantity,
-					shipping, gst, Math.round(count * 100.0) / 100.0));
+			priceratio = pricetoquantity / count;
+			System.out.println(priceratio);
+			sc_individual = total_shipping_charges * priceratio;
+			System.out.println(sc_individual);
+			// individual shipping charges gst
+			sc_individual_gst = sc_individual * (gst / 100);
+			System.out.println(sc_individual_gst + "      a");
+
+			total_individual = pricetoquantity + sc_individual + sc_individual_gst;
+			bill.add(new BillingDetails(i.getProid(), i.getName(), i.getPrice(), i.getQuantity(),
+					Math.round(prodwithoutgst), Math.round(ingst), Math.round(pricetoquantity),
+					Math.round(sc_individual), Math.round(sc_individual_gst), Math.round(total_individual)));
 			cs.close();
 		}
 
 		return bill;
+	}
+
+	private double getshippingcharges(double count) throws SQLException {
+		double sc = 0;
+		cs = con.prepareCall("{?=call getshipping(?)}");
+		cs.registerOutParameter(1, Types.NUMERIC);
+		cs.setInt(2, (int) count);
+		cs.execute();
+		sc = cs.getBigDecimal(1).doubleValue();
+		return sc;
+	}
+
+	private double gettotal(List<Items> list) {
+		double count = 0;
+		for (Items i : list) {
+			count += i.getPrice() * i.getQuantity();
+
+		}
+		return count;
 	}
 
 	public boolean checkpincode(String pincode, String prodid) throws SQLException {
@@ -200,4 +220,22 @@ public class DB_Properties implements StoreDAO {
 
 	}
 
+	public double discountcoupon(double amount, double couponcode) throws SQLException {
+		cs = con.prepareCall("{?=call getdiscount(?,?)}");
+		cs.registerOutParameter(1, Types.NUMERIC);
+		cs.setDouble(2, couponcode);
+		cs.setDouble(3, amount);
+		cs.execute();
+		double discount = cs.getBigDecimal(1).doubleValue();
+		if (discount > 0) {
+			updatecouponreport();
+		}
+		return discount;
+
+	}
+
+	private void updatecouponreport() {
+		// TODO Auto-generated method stub
+
+	}
 }

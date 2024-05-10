@@ -12,7 +12,8 @@
     <!-- Latest compiled and minified CSS -->
     <!-- Bootstrap CDN link -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="../javascript/checkout.js"></script>
 </head>
 <body>
     <table class="table-class">
@@ -20,12 +21,14 @@
             <tr>
                 <th>SNo</th>
                 <th>Item Name</th>
-                <th>Item Quantity</th>
                 <th>Item Price</th>
-                <th>Total Base Price</th>
-                <th>Shipping Charge</th>
-                <th>GST</th>
-                <th>Total Price</th>
+                <th>Item Quantity</th>
+                <th>Price(no gst)</th>
+                <th>in gst</th>
+                <th>Total Cost</th>
+                <th>Shipping charges</th>
+                <th>gst(sc)</th>
+                <th>Final Price</th>
             </tr>
         </thead>
         <tbody>
@@ -35,17 +38,17 @@
             if (bill != null) {
                 int sno = 1;
                 for (BillingDetails detail : bill) {
-                	System.out.println("dhdhd");
-                	System.out.println(detail.getProid());
             %>
             <tr>
                 <td><%= sno++ %></td>
                 <td><%= detail.getProdname() %></td>
-                <td><%= detail.getQuantity() %></td>
-                <td><%= detail.getPrice() %></td>
-                <td><%= detail.getTotalbaseprice() %></td>
-                <td><%= detail.getShipchg() %></td>
-                <td><%= detail.getGst() %></td>
+                <td><%= detail.getPrice()  %></td>
+                <td><%= detail.getQuantity()%></td>
+                <td><%= detail.getPricewithoutgst() %></td>
+                <td><%= detail.getIngst() %></td>
+                <td><%= detail.getTotalpriceperquantity() %></td>
+                <td><%= detail.getSc() %></td>
+                <td><%= detail.getScgst() %></td>
                 <td><%= detail.getFinalprice() %></td>
             </tr>
             <% 
@@ -54,40 +57,43 @@
             %>
         </tbody>
     </table>
+    <div>
+    	<h1>Total Amount : <span id="amount"> </span></h1>
+    </div>
+    <div class="coupon-container">
+        <h2>Apply Coupon</h2>
+        <div class="coupon-form">
+            <input type="text" id="coupon-code" placeholder="Enter your coupon code">
+            <button id="apply-coupon-btn">Apply</button>
+        </div>
+    </div>
     <button id="rzp-button1">Pay</button>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
-reload();
-function reload()
-{
-	location.reload(); 	
-}
+ 
 var tableBody = document.querySelector(".table-class tbody");
 
 //Function to get values of last column in each row
 function getLastColumnValues() {
- var lastColumnValues = [];
- // Iterate through each row in the table body
- for (var i = 0; i < tableBody.rows.length; i++) {
+ 		 var lastColumnValues = [];
+		 var total=0;
 
-     var lastCell = tableBody.rows[i].cells[tableBody.rows[i].cells.length - 1];
-   
-     lastColumnValues.push(lastCell.textContent);
- }
- return lastColumnValues;
-}
+		 for (var i = 0; i < tableBody.rows.length; i++) {
+		
+			 var lastCell = tableBody.rows[i].cells[tableBody.rows[i].cells.length - 1];
+			 total += parseFloat(lastCell.textContent);
+		     
+		 }
+		 return total;
+		}
 
-//Function to calculate the sum of an array
-function sumArray(arr) {
-    return arr.reduce((total, current) => total + current, 0);
-}
+document.querySelector("#amount").textContent = getLastColumnValues();
 
 // Example usage:
 var lastColumnValues = getLastColumnValues();
 console.log("Values of last column:", lastColumnValues);
 
-var sum = sumArray(lastColumnValues);
-console.log("Sum of values in the last column:", sum);
+
 
 var options = {
     "key": "rzp_test_igiSdOA5LIjesg", // Enter the Key ID generated from the Dashboard

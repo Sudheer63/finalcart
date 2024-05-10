@@ -5,20 +5,24 @@ public class BillingDetails {
 	private String prodname;
 	private float price;
 	private int quantity;
-	private double totalbaseprice;
-	private double shipchg;
-	private double gst;
+	private double pricewithoutgst;
+	private double ingst;
+	private double totalpriceperquantity;
+	private double sc;
+	private double scgst;
 	private double finalprice;
 
-	public BillingDetails(int proid, String prodname, float price, int quantity, double totalbaseprice, double shipchg,
-			double gst, double finalprice) {
+	public BillingDetails(int proid, String prodname, float price, int quantity, double pricewithoutgst, double ingst,
+			double totalpriceperquantity, double sc, double scgst, double finalprice) {
 		this.setProid(proid);
 		this.setProdname(prodname);
 		this.setPrice(price);
 		this.setQuantity(quantity);
-		this.setShipchg(shipchg);
-		this.setGst(gst);
-		this.setTotalbaseprice(totalbaseprice);
+		this.setPricewithoutgst(pricewithoutgst);
+		this.setIngst(ingst);
+		this.setTotalpriceperquantity(totalpriceperquantity);
+		this.setSc(sc);
+		this.setScgst(scgst);
 		this.setFinalprice(finalprice);
 	}
 
@@ -28,30 +32,6 @@ public class BillingDetails {
 
 	public void setProid(int proid) {
 		this.proid = proid;
-	}
-
-	public double getTotalbaseprice() {
-		return totalbaseprice;
-	}
-
-	public void setTotalbaseprice(double totalbaseprice) {
-		this.totalbaseprice = totalbaseprice;
-	}
-
-	public double getShipchg() {
-		return shipchg;
-	}
-
-	public void setShipchg(double shipchg) {
-		this.shipchg = shipchg;
-	}
-
-	public double getGst() {
-		return gst;
-	}
-
-	public void setGst(double gst) {
-		this.gst = gst;
 	}
 
 	public double getFinalprice() {
@@ -84,5 +64,45 @@ public class BillingDetails {
 
 	public void setPrice(float price) {
 		this.price = price;
+	}
+
+	public double getPricewithoutgst() {
+		return pricewithoutgst;
+	}
+
+	public void setPricewithoutgst(double pricewithoutgst) {
+		this.pricewithoutgst = pricewithoutgst;
+	}
+
+	public double getIngst() {
+		return ingst;
+	}
+
+	public void setIngst(double ingst) {
+		this.ingst = ingst;
+	}
+
+	public double getTotalpriceperquantity() {
+		return totalpriceperquantity;
+	}
+
+	public void setTotalpriceperquantity(double totalpriceperquantity) {
+		this.totalpriceperquantity = totalpriceperquantity;
+	}
+
+	public double getSc() {
+		return sc;
+	}
+
+	public void setSc(double sc) {
+		this.sc = sc;
+	}
+
+	public double getScgst() {
+		return scgst;
+	}
+
+	public void setScgst(double scgst) {
+		this.scgst = scgst;
 	}
 }

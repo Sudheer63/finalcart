@@ -24,5 +24,7 @@ public interface StoreDAO {
 
 	boolean checkpincode(String pincode, String prodid) throws SQLException;
 
-	ArrayList<BillingDetails> shippingcharges(List<Items> list) throws SQLException;
+	ArrayList<BillingDetails> proposedbill(List<Items> list) throws SQLException;
+
+	double discountcoupon(double amount, double couponcode) throws SQLException;
 }
